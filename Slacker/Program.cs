@@ -19,8 +19,16 @@ namespace Slacker
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Retrieving files list...");
-            JArray Files = GetFilesList();
+            JArray Files;
+
+            if(args.Length > 0)
+            {
+                Console.WriteLine("Chanel Id of \"" + args[0] + "\" is " + ChannelIdOf(args[0]));
+            }
+            else
+            {
+                JArray Files = GetFilesList();
+            }
 
             foreach(JObject FileObj in Files)
             {
@@ -42,11 +50,38 @@ namespace Slacker
 
         static JArray GetFilesList()
         {
-            string Responce = slack.SendPostApiRequest("files.list");
-
+            string Responce = slack.SendGetApiRequest("files.list");
             JObject ListObj = JObject.Parse(Responce);
-
             return ListObj.Value<JArray>("files");
+        }
+
+        static JArray GetFilesListFrom(string ChannelID)
+        {
+            string Responce = slack.SendGetApiRequest("files.list", "channel=" + ChannelID);
+            JObject ListObj = JObject.Parse(Responce);
+            return ListObj.Value<JArray>("files");
+        }
+
+        static JArray GetChannelsList()
+        {
+            string Responce = slack.SendPostApiRequest("channels.list");
+            JObject ListObj = JObject.Parse(Responce);
+            return ListObj.Value<JArray>("channels");
+        }
+
+        static string ChannelIdOf(string ChannelName)
+        {
+            JArray Channeles = GetChannelsList();
+            foreach(JObject Channel in Channeles)
+            {
+                string Name = Channel.Value<string>("name");
+                string Id = Channel.Value<string>("id");
+                if (Name == ChannelName)
+                {
+                    return Id;
+                }
+            }
+            return null;
         }
 
         static string MakeValidFileName(string FileName)
