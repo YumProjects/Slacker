@@ -39,7 +39,7 @@ namespace Slacker
                 string Url = FileObj.Value<string>("url_private");
 
                 Console.WriteLine("Downloading \"" + Name + "\"...");
-
+                
                 string FilePath = MakeValidPath("C:\\Users\\Benny\\Desktop\\Slack\\" + Name);
 
                 slack.DownloadToFile(Url, FilePath);
