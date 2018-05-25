@@ -1,9 +1,0 @@
-C:\Users\Benny\Documents\Visual Studio 2017\Projects\Slacker\Slacker\bin\Debug\Slacker.exe.config
-C:\Users\Benny\Documents\Visual Studio 2017\Projects\Slacker\Slacker\bin\Debug\Slacker.exe
-C:\Users\Benny\Documents\Visual Studio 2017\Projects\Slacker\Slacker\bin\Debug\Slacker.pdb
-C:\Users\Benny\Documents\Visual Studio 2017\Projects\Slacker\Slacker\obj\Debug\Slacker.csprojResolveAssemblyReference.cache
-C:\Users\Benny\Documents\Visual Studio 2017\Projects\Slacker\Slacker\obj\Debug\Slacker.csproj.CoreCompileInputs.cache
-C:\Users\Benny\Documents\Visual Studio 2017\Projects\Slacker\Slacker\obj\Debug\Slacker.exe
-C:\Users\Benny\Documents\Visual Studio 2017\Projects\Slacker\Slacker\obj\Debug\Slacker.pdb
-C:\Users\Benny\Documents\Visual Studio 2017\Projects\Slacker\Slacker\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Benny\Documents\Visual Studio 2017\Projects\Slacker\Slacker\bin\Debug\Newtonsoft.Json.xml
