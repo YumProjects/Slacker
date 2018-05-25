@@ -12,11 +12,13 @@ namespace Slacker
 {
     class Program
     {
-        static string Token = "xoxp-166756780596-250867385107-370178277573-8a15d543b26c2b515c97857d48c1ff29";
-        static Slack slack = new Slack(Token);
+        static Slack slack;
 
         static void Main(string[] args)
         {
+            Properties.Settings settings = new Properties.Settings();
+
+            slack = new Slack(settings.Token);
             JArray Files;
 
             if(args.Length > 0)
