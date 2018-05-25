@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Net;
 using System.IO;
-using System.Net.Http;
 
 namespace Slacker
 {
     class Program
     {
-        static string Token = "xoxp-166756780596-250867385107-368693279941-b9c4e0600d550b80f91a5eded5f1c4cc";
+        static string Token = "xoxp-166756780596-250867385107-370178277573-8a15d543b26c2b515c97857d48c1ff29";
         static Slack slack = new Slack(Token);
 
         static void Main(string[] args)
@@ -23,11 +21,13 @@ namespace Slacker
 
             if(args.Length > 0)
             {
-                Console.WriteLine("Chanel Id of \"" + args[0] + "\" is " + ChannelIdOf(args[0]));
+                string ChannelID = slack.GetChannelId(args[0]);
+                Console.WriteLine("Chanel Id of \"" + args[0] + "\" is " + ChannelID);
+                Files = slack.GetFilesFrom(ChannelID);
             }
             else
             {
-                JArray Files = GetFilesList();
+                Files = slack.GetFiles();
             }
 
             foreach(JObject FileObj in Files)
@@ -38,62 +38,38 @@ namespace Slacker
 
                 Console.WriteLine("Downloading \"" + Name + "\"...");
 
-                string FilePath = "C:\\Users\\Benny\\Desktop\\Slack\\" + MakeValidFileName(Name);
+                string FilePath = MakeValidPath("C:\\Users\\Benny\\Desktop\\Slack\\" + Name);
 
-                byte[] Data = slack.DownloadSlackUrl(Url);
-
-                File.WriteAllBytes(FilePath, Data);
+                slack.DownloadToFile(Url, FilePath);
             }
 
             Console.ReadLine();
         }
 
-        static JArray GetFilesList()
+        static string MakeValidPath(string path)
         {
-            string Responce = slack.SendGetApiRequest("files.list");
-            JObject ListObj = JObject.Parse(Responce);
-            return ListObj.Value<JArray>("files");
-        }
+            string tmp = path;
 
-        static JArray GetFilesListFrom(string ChannelID)
-        {
-            string Responce = slack.SendGetApiRequest("files.list", "channel=" + ChannelID);
-            JObject ListObj = JObject.Parse(Responce);
-            return ListObj.Value<JArray>("files");
-        }
-
-        static JArray GetChannelsList()
-        {
-            string Responce = slack.SendPostApiRequest("channels.list");
-            JObject ListObj = JObject.Parse(Responce);
-            return ListObj.Value<JArray>("channels");
-        }
-
-        static string ChannelIdOf(string ChannelName)
-        {
-            JArray Channeles = GetChannelsList();
-            foreach(JObject Channel in Channeles)
+            foreach (char c in Path.GetInvalidPathChars())
             {
-                string Name = Channel.Value<string>("name");
-                string Id = Channel.Value<string>("id");
-                if (Name == ChannelName)
+                tmp = tmp.Replace(c, '_');
+            }
+
+            string FolderPath = Path.GetDirectoryName(tmp);
+            string FullName = Path.GetFileName(tmp);
+            string Name = Path.GetFileNameWithoutExtension(tmp);
+            string Extention = Path.GetExtension(tmp);
+
+            if (File.Exists(tmp))
+            {
+                int i = 1;
+                while (File.Exists(tmp))
                 {
-                    return Id;
+                    tmp = FolderPath + "\\" + Name + "_" + i + Extention;
+                    i++;
                 }
             }
-            return null;
-        }
-
-        static string MakeValidFileName(string FileName)
-        {
-            string ValidFileName = FileName;
-
-            foreach(char c in Path.GetInvalidFileNameChars())
-            {
-                ValidFileName = ValidFileName.Replace(c, '_');
-            }
-
-            return ValidFileName;
+            return tmp;
         }
     }
 }
